@@ -80,6 +80,51 @@ module "sg_id-catalogue"{
     server="catalogue"
 }
 
+module "sg_id-user"{
+    source= "git::https://github.com/Pavankotha9550/terraform-roboshop-dev-module.git//10-module-sg?ref=main"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    environment=var.environment
+    project=var.project
+    description="user security group"
+    server="user"
+}
+
+module "sg_id-cart"{
+    source= "git::https://github.com/Pavankotha9550/terraform-roboshop-dev-module.git//10-module-sg?ref=main"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    environment=var.environment
+    project=var.project
+    description="cart security group"
+    server="cart"
+}
+
+module "sg_id-shipping"{
+    source= "git::https://github.com/Pavankotha9550/terraform-roboshop-dev-module.git//10-module-sg?ref=main"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    environment=var.environment
+    project=var.project
+    description="shipping security group"
+    server="shipping"
+}
+
+module "sg_id-payment"{
+    source= "git::https://github.com/Pavankotha9550/terraform-roboshop-dev-module.git//10-module-sg?ref=main"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    environment=var.environment
+    project=var.project
+    description="payment security group"
+    server="payment"
+}
+
+module "sg_id-flb"{
+    source= "git::https://github.com/Pavankotha9550/terraform-roboshop-dev-module.git//10-module-sg?ref=main"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    environment=var.environment
+    project=var.project
+    description="FLB security group"
+    server="FLB loadbalancer"
+
+
 #bastion accepting connections form any laptop
 resource "aws_security_group_rule" "bastion_laptop"{
     type= "ingress"
@@ -184,6 +229,17 @@ resource "aws_security_group_rule" "mysql"{
     security_group_id= module.sg_id-mysql.sg_id
 }
 
+#mysql accepting connections form shipping
+resource "aws_security_group_rule" "mysql_ports_shipping"{
+    count=length(var.mysql_ports_shipping)
+    type= "ingress"
+    from_port= var.mysql_ports_shipping[count.index]
+    to_port= var.mysql_ports_shipping[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-shipping.sg_id
+    security_group_id= module.sg_id-mysql.sg_id
+}
+
 #rabbitmq accepting connections form vpn
 resource "aws_security_group_rule" "rabbitmq"{
     count=length(var.rabbitmq_ports_vpn)
@@ -192,6 +248,17 @@ resource "aws_security_group_rule" "rabbitmq"{
     to_port= var.rabbitmq_ports_vpn[count.index]
     protocol= "tcp"
     source_security_group_id= module.sg_id-vpn.sg_id
+    security_group_id= module.sg_id-rabbitmq.sg_id
+}
+
+#rabbitmq accepting connections form payment
+resource "aws_security_group_rule" "rabbitmq_ports_payment"{
+    count=length(var.rabbitmq_ports_payment)
+    type= "ingress"
+    from_port= var.rabbitmq_ports_payment[count.index]
+    to_port= var.rabbitmq_ports_payment[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-payment.sg_id
     security_group_id= module.sg_id-rabbitmq.sg_id
 }
 
@@ -235,6 +302,41 @@ resource "aws_security_group_rule" "mongodb_ports_catalogue"{
     from_port= var.mongodb_ports_catalogue[count.index]
     to_port= var.mongodb_ports_catalogue[count.index]
     protocol= "tcp"
-    source_security_group_id= module.sg_id-alb.sg_id
-    security_group_id= module.sg_id-catalogue.sg_id
+    source_security_group_id= module.sg_id-catalogue.sg_id
+    security_group_id= module.sg_id-mongodb.sg_id
 }
+
+#mongodb accepting connections form user
+resource "aws_security_group_rule" "mongodb_ports_user"{
+    count=length(var.mongodb_ports_user)
+    type= "ingress"
+    from_port= var.mongodb_ports_user[count.index]
+    to_port= var.mongodb_ports_user[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-user.sg_id
+    security_group_id= module.sg_id-mongodb.sg_id
+}
+
+#redis accepting connections form user
+resource "aws_security_group_rule" "redis_ports_user"{
+    count=length(var.redis_ports_user)
+    type= "ingress"
+    from_port= var.redis_ports_user[count.index]
+    to_port= var.redis_ports_user[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-user.sg_id
+    security_group_id= module.sg_id-redis.sg_id
+}
+
+#redis accepting connections form cart
+resource "aws_security_group_rule" "redis_ports_cart"{
+    count=length(var.redis_ports_cart)
+    type= "ingress"
+    from_port= var.redis_ports_cart[count.index]
+    to_port= var.redis_ports_cart[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-cart.sg_id
+    security_group_id= module.sg_id-redis.sg_id
+}
+
+

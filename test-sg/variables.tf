@@ -22,12 +22,28 @@ variable "redis_ports_vpn"{
 default=[22,6379]
 }
 
+variable "redis_ports_user"{
+default=[5679]
+}
+
+variable "redis_ports_cart"{
+default=[5679]
+}
+
 variable "mysql_ports_vpn"{
 default=[22,3306]
 }
 
+variable "mysql_ports_shipping"{
+default=[3306]
+}
+
 variable "rabbitmq_ports_vpn"{
 default=[22,5672]
+}
+
+variable "rabbitmq_ports_payment"{
+default=[5672]
 }
 
 variable "catalogue_ports_vpn"{
@@ -43,5 +59,9 @@ default=[8080]
 }
 
 variable "mongodb_ports_catalogue"{
+default=[27017]
+}
+
+variable "mongodb_ports_user"{
 default=[27017]
 }

@@ -37,3 +37,7 @@ data "aws_route53_zone" "daws84" {
 data "server"{
   default= "catalogue"
 }
+
+data "aws_ssm_parameter" "alb-ARN"{
+name= "/${var.project}/${var.environment}/alb-ARN"
+}

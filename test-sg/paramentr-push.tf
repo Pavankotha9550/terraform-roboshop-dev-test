@@ -45,3 +45,41 @@ resource "aws_ssm_parameter" "catalogue" {
   type  = "String"
   value = module.sg_id-catalogue.sg_id
 }
+
+resource "aws_ssm_parameter" "user" {
+  name  = "/${var.project}/${var.environment}/user-sg_id"
+  type  = "String"
+  value = module.sg_id-user.sg_id
+}
+
+resource "aws_ssm_parameter" "cart" {
+  name  = "/${var.project}/${var.environment}/cart-sg_id"
+  type  = "String"
+  value = module.sg_id-cart.sg_id
+}
+
+
+resource "aws_ssm_parameter" "shipping" {
+  name  = "/${var.project}/${var.environment}/shipping-sg_id"
+  type  = "String"
+  value = module.sg_id-shipping.sg_id
+}
+
+
+resource "aws_ssm_parameter" "payment" {
+  name  = "/${var.project}/${var.environment}/payment-sg_id"
+  type  = "String"
+  value = module.sg_id-payment.sg_id
+}
+
+resource "aws_ssm_parameter" "frontend" {
+  name  = "/${var.project}/${var.environment}/frontend-sg_id"
+  type  = "String"
+  value = module.sg_id-frontend.sg_id
+}
+
+resource "aws_ssm_parameter" "flb" {
+  name  = "/${var.project}/${var.environment}/flb-sg_id"
+  type  = "String"
+  value = module.sg_id-flb.sg_id
+}

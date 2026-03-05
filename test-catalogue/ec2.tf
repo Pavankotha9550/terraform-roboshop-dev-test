@@ -73,3 +73,111 @@ resource "terraform_data" "catalogue_delete" {
 
   depends_on = [aws_ami_from_instance.catalogue]
 }
+
+resource "aws_launch_template" "catalogue" {
+  name= "catalogue.${var.zone_id}"
+  image_id = aws_ami_from_instance.catalogue.id
+  instance_type = "t2.micro"
+  vpc_security_group_ids = [var.catalogue-sg_id]
+  update_default_version = true
+
+  tag_specifications {
+    resource_type = "instance"
+    # EC2 tags created by ASG
+    tags =
+      {
+        Name = "${var.project}-${var.environment}-catalogue"
+      }  
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    # EC2 tags created by ASG
+    tags =
+      {
+        Name = "${var.project}-${var.environment}-catalogue"
+      }  
+  }
+
+  tags ={
+    Name= "${var.project}-${var.environment}-catalogue"
+  }
+}
+
+resource "aws_autoscaling_group" "catalogue" {
+  name     = "catalogue.${var.zone_id}"
+  max_size                  = 10
+  min_size                  = 1
+  health_check_grace_period = 100
+  health_check_type         = "ELB"
+  desired_capacity          = 1
+  vpc_zone_identifier       = split("," ,data.aws_ssm_parameter.private_subnet_id.value)
+  target_group_arns =[aws_lb_target_group.catalogue.arn]
+
+
+  launch_template {
+    id      = aws_launch_template.catalogue.id
+    version = aws_launch_template.catalogue.latest_version
+  }
+
+  dynamic "tag" {
+    for_each = 
+      {
+        Name = "${var.project}-${var.environment}-catalogue"
+      }
+
+    content{
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+    
+  }
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+    }
+    triggers = ["launch_template"]
+  }
+
+   timeouts{
+    delete = "15m"
+  }
+
+}
+
+resource "aws_autoscaling_policy" "catalogue" {
+  name                   = "catalogue.${var.zone_id}"
+  scaling_adjustment     = 1
+  policy_type       = "TargetTrackingScaling"
+  cooldown               = 100
+  autoscaling_group_name = aws_autoscaling_group.catalogue.name
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 80.0
+  }
+}
+
+resource "aws_lb_listener_rule" "catalogue" {
+  listener_arn = data.aws_ssm_parameter.alb-ARN.value
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.catalogue.arn
+  }
+
+  condition {
+    host_header {
+      values = ["catalogue.daws84.cyou"]
+    }
+  }
+}
+
+
