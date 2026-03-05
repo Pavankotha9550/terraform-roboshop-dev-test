@@ -30,14 +30,12 @@ data "aws_ami" "DevOps_practice_ami_id" {
   owners = ["973714476881"] 
 }
 
-data "aws_route53_zone" "daws84" {
-  name         = "daws84.cyou"
-}
-
-data "server"{
-  default= "catalogue"
-}
 
 data "aws_ssm_parameter" "alb-ARN"{
 name= "/${var.project}/${var.environment}/alb-ARN"
 }
+
+data "aws_ssm_parameter" "catalogue-sg_id"{
+name= "/${var.project}/${var.environment}/catalogue-sg_id"
+}
+

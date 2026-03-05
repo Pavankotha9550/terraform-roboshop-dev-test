@@ -123,6 +123,7 @@ module "sg_id-flb"{
     project=var.project
     description="FLB security group"
     server="FLB loadbalancer"
+}
 
 
 #bastion accepting connections form any laptop

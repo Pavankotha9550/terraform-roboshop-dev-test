@@ -4,7 +4,7 @@ resource "aws_instance" "catalogue" {
   vpc_security_group_ids= [data.aws_ssm_parameter.catalogue.value]
   subnet_id= split("," ,data.aws_ssm_parameter.private_subnet_id.value)[0]
   #iam_instance_profile= "EC2RoleToFetchSSMParameter"
-  deregistration_delay = 120 #time giving to instance to complete all the pending requests to complete 
+  
   
   tags = {
     Name="${var.project}-${var.environment}-catalogue"
@@ -75,17 +75,16 @@ resource "terraform_data" "catalogue_delete" {
 }
 
 resource "aws_launch_template" "catalogue" {
-  name= "catalogue.${var.zone_id}"
+  name= "catalogue.${var.zone_name}"
   image_id = aws_ami_from_instance.catalogue.id
   instance_type = "t2.micro"
-  vpc_security_group_ids = [var.catalogue-sg_id]
+  vpc_security_group_ids = [data.aws_ssm_parameter.catalogue-sg_id.value]
   update_default_version = true
 
   tag_specifications {
     resource_type = "instance"
     # EC2 tags created by ASG
-    tags =
-      {
+    tags = {
         Name = "${var.project}-${var.environment}-catalogue"
       }  
   }
@@ -93,8 +92,7 @@ resource "aws_launch_template" "catalogue" {
   tag_specifications {
     resource_type = "volume"
     # EC2 tags created by ASG
-    tags =
-      {
+    tags ={
         Name = "${var.project}-${var.environment}-catalogue"
       }  
   }
@@ -105,7 +103,7 @@ resource "aws_launch_template" "catalogue" {
 }
 
 resource "aws_autoscaling_group" "catalogue" {
-  name     = "catalogue.${var.zone_id}"
+  name     = "catalogue.${var.zone_name}"
   max_size                  = 10
   min_size                  = 1
   health_check_grace_period = 100
@@ -121,8 +119,7 @@ resource "aws_autoscaling_group" "catalogue" {
   }
 
   dynamic "tag" {
-    for_each = 
-      {
+    for_each = {
         Name = "${var.project}-${var.environment}-catalogue"
       }
 
@@ -149,10 +146,11 @@ resource "aws_autoscaling_group" "catalogue" {
 }
 
 resource "aws_autoscaling_policy" "catalogue" {
-  name                   = "catalogue.${var.zone_id}"
+  name                   = "catalogue.${var.zone_name}"
   scaling_adjustment     = 1
   policy_type       = "TargetTrackingScaling"
-  cooldown               = 100
+  instance_warmup = 100
+  #cooldown               = 100 this dosent work here
   autoscaling_group_name = aws_autoscaling_group.catalogue.name
 
   target_tracking_configuration {
@@ -180,4 +178,20 @@ resource "aws_lb_listener_rule" "catalogue" {
   }
 }
 
+resource "aws_lb_target_group" "catalogue" {
+  name     = "${var.project}-${var.environment}-catalogue"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = data.aws_ssm_parameter.vpc_id.value
+  deregistration_delay = 120 #time giving to instance to complete all the pending requests to complete 
 
+  health_check{
+    healthy_threshold =2 
+    interval = 5
+    matcher = "200-299"
+    path = "/health"
+    port = 8080
+    timeout= 2
+    unhealthy_threshold =3
+  }
+}
