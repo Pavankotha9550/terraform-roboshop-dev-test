@@ -22,3 +22,6 @@ data "aws_ssm_parameter" "public_subnet_id"{
     name= "/${var.project}/${var.environment}/public_subnet_ids"
 }
 
+data "aws_route53_zone" "daws84" {
+  name         = "daws84.cyou"
+}

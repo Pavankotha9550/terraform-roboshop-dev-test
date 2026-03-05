@@ -39,3 +39,9 @@ resource "aws_ssm_parameter" "rabbitmq" {
   type  = "String"
   value = module.sg_id-rabbitmq.sg_id
 }
+
+resource "aws_ssm_parameter" "catalogue" {
+  name  = "/${var.project}/${var.environment}/catalogue-sg_id"
+  type  = "String"
+  value = module.sg_id-catalogue.sg_id
+}

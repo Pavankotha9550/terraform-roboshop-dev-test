@@ -19,3 +19,12 @@ resource "aws_instance" "vpn" {
   key_name= "keys.pub"
   public_key = file (C:\\dev-84s\\keys.pub)
 }*/
+
+resource "aws_route53_record" "vpn" {
+  zone_id =  data.aws_route53_zone.daws84.zone_id
+  name    = "vpn.daws84.cyou"
+  type    = "A"
+  ttl = 1
+  records= [aws_instance.vpn.public_ip]
+  allow_overwrite= true
+}

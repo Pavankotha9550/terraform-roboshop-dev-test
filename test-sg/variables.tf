@@ -29,3 +29,19 @@ default=[22,3306]
 variable "rabbitmq_ports_vpn"{
 default=[22,5672]
 }
+
+variable "catalogue_ports_vpn"{
+default=[22,8080]
+}
+
+variable "catalogue_ports_bastion"{
+default=[22]
+}
+
+variable "catalogue_ports_alb"{
+default=[8080]
+}
+
+variable "mongodb_ports_catalogue"{
+default=[27017]
+}

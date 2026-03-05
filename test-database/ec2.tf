@@ -62,8 +62,7 @@ resource "terraform_data" "redis"{
     password = "DevOps321"
     host     = aws_instance.redis.private_ip
   }
-
-   provisioner "remote-exec" {
+  provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
       "sudo sh /tmp/bootstrap.sh redis"
@@ -76,6 +75,7 @@ resource "aws_instance" "mysql" {
   instance_type = "t3.micro"
   vpc_security_group_ids= [data.aws_ssm_parameter.mysql.value]
   subnet_id= split("," ,data.aws_ssm_parameter.database_subnet_id.value)[0]
+  iam_instance_profile= "EC2RoleToFetchSSMParameter"
   
   tags = {
     Name="${var.project}-${var.environment}-mysql"

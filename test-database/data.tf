@@ -34,3 +34,6 @@ data "aws_ssm_parameter" "database_subnet_id"{
     name= "/${var.project}/${var.environment}/database_subnet_ids"
 }
 
+data "aws_route53_zone" "daws84" {
+  name         = "daws84.cyou"
+}

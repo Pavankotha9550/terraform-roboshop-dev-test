@@ -71,6 +71,15 @@ module "sg_id-rabbitmq"{
     server="rabbitmq"
 }
 
+module "sg_id-catalogue"{
+    source= "git::https://github.com/Pavankotha9550/terraform-roboshop-dev-module.git//10-module-sg?ref=main"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    environment=var.environment
+    project=var.project
+    description="catalogue security group"
+    server="catalogue"
+}
+
 #bastion accepting connections form any laptop
 resource "aws_security_group_rule" "bastion_laptop"{
     type= "ingress"
@@ -184,4 +193,48 @@ resource "aws_security_group_rule" "rabbitmq"{
     protocol= "tcp"
     source_security_group_id= module.sg_id-vpn.sg_id
     security_group_id= module.sg_id-rabbitmq.sg_id
+}
+
+#catalogue accepting connections form vpn
+resource "aws_security_group_rule" "catalogue_ports_vpn"{
+    count=length(var.catalogue_ports_vpn)
+    type= "ingress"
+    from_port= var.catalogue_ports_vpn[count.index]
+    to_port= var.catalogue_ports_vpn[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-vpn.sg_id
+    security_group_id= module.sg_id-catalogue.sg_id
+}
+
+#catalogue accepting connections form bastion
+resource "aws_security_group_rule" "catalogue_ports_bastion"{
+    count=length(var.catalogue_ports_bastion)
+    type= "ingress"
+    from_port= var.catalogue_ports_bastion[count.index]
+    to_port= var.catalogue_ports_bastion[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-bastion.sg_id
+    security_group_id= module.sg_id-catalogue.sg_id
+}
+
+#catalogue accepting connections form alb
+resource "aws_security_group_rule" "catalogue_ports_alb"{
+    count=length(var.catalogue_ports_alb)
+    type= "ingress"
+    from_port= var.catalogue_ports_alb[count.index]
+    to_port= var.catalogue_ports_alb[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-alb.sg_id
+    security_group_id= module.sg_id-catalogue.sg_id
+}
+
+#mongodb accepting connections form catalogue
+resource "aws_security_group_rule" "mongodb_ports_catalogue"{
+    count=length(var.mongodb_ports_catalogue)
+    type= "ingress"
+    from_port= var.mongodb_ports_catalogue[count.index]
+    to_port= var.mongodb_ports_catalogue[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-alb.sg_id
+    security_group_id= module.sg_id-catalogue.sg_id
 }
