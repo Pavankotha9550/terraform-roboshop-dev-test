@@ -11,14 +11,14 @@ resource "aws_instance" "catalogue" {
   }
 }
 
-resource "aws_route53_record" "catalogue" {
+/*resource "aws_route53_record" "catalogue" {
   zone_id =  data.aws_route53_zone.daws84.zone_id
   name    = "${var.server}.daws84.cyou"
   type    = "A"
   ttl = 1
   records= [aws_instance.catalogue.private_ip]
   allow_overwrite= true
-}
+}*/
 
 resource "terraform_data" "catalogue"{
   triggers_replace=[
