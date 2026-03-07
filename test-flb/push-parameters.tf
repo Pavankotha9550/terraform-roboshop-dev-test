@@ -1,5 +1,5 @@
-resource "aws_ssm_parameter" "alb-ARN" {
-  name  = "/${var.project}/${var.environment}/alb-ARN"
+resource "aws_ssm_parameter" "flb-ARN" {
+  name  = "/${var.project}/${var.environment}/flb-ARN"
   type  = "String"
   value = module.alb.arn
 }
