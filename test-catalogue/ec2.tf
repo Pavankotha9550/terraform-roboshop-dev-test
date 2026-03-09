@@ -147,7 +147,7 @@ resource "aws_autoscaling_group" "catalogue" {
 
 resource "aws_autoscaling_policy" "catalogue" {
   name                   = "catalogue.${var.zone_name}"
-  scaling_adjustment     = 1
+  #scaling_adjustment     = 1
   policy_type       = "TargetTrackingScaling"
   instance_warmup = 100
   #cooldown               = 100 this dosent work here
