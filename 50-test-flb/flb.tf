@@ -29,7 +29,7 @@ resource "aws_lb_listener" "fixed_response" {
 
     fixed_response {
       content_type = "text/html"
-      message_body = "<h1>html default fixed responce from ALB<h1>"
+      message_body = "<h1>html default fixed responce from FLB<h1>"
       status_code  = "200"
     }
   }
