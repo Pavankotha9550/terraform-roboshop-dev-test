@@ -352,3 +352,13 @@ resource "aws_security_group_rule" "redis_ports_cart"{
 }
 
 
+#frontend accepting connections form vpn
+resource "aws_security_group_rule" "frontend"{
+    count=length(var.frontend_ports_vpn)
+    type= "ingress"
+    from_port= var.frontend_ports_vpn[count.index]
+    to_port= var.frontend_ports_vpn[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-vpn.sg_id
+    security_group_id= module.sg_id-frontend.sg_id
+}
