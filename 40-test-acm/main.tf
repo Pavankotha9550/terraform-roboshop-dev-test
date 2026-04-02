@@ -1,9 +1,9 @@
-resource "aws_acm_certificate" "daws84"
+resource "aws_acm_certificate" "daws84"{
   domain_name       = "daws84.cyou"
   validation_method = "DNS"
 
   tags = {
-    Environment = "dev
+    Environment = "dev"
   }
 
   lifecycle {
@@ -31,6 +31,6 @@ resource "aws_route53_record" "example" {
 
 resource "aws_acm_certificate_validation" "daws84" {
   certificate_arn         = aws_acm_certificate.daws84.arn
-  validation_record_fqdns = [for record in aws_route53_record.daws84 : record.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.example : record.fqdn]
 }
 

@@ -3,7 +3,7 @@ module "flb" {
   version= "9.16.0"
   name    = "${var.project}-${var.environment}-application-FLB"
   vpc_id  = data.aws_ssm_parameter.vpc_id.value
-  subnets = split("," ,data.aws_ssm_parameter.private_subnet_id.value)
+  subnets = split("," ,data.aws_ssm_parameter.public_subnet_id.value)
   internal= false
   create_security_group= false
   security_groups=[data.aws_ssm_parameter.sg_id.value]
@@ -17,11 +17,11 @@ module "flb" {
 }
 
 resource "aws_lb_listener" "fixed_response" {
-  load_balancer_arn = module.alb.arn
+  load_balancer_arn = module.flb.arn
   port              = "8080"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = data.aws_ssm_parameter.daws84-arn-flb
+  certificate_arn   = data.aws_ssm_parameter.daws84-arn-flb.value
 
 
   default_action {
@@ -39,6 +39,7 @@ resource "aws_route53_record" "backend-alb" {
   zone_id =  data.aws_route53_zone.daws84.zone_id
   name    = "daws84.cyou"
   type    = "A"
+  allow_overwrite= true
 
   alias {
     name                   = module.flb.dns_name

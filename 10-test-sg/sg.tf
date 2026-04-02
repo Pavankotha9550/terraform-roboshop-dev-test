@@ -208,6 +208,17 @@ resource "aws_security_group_rule" "mongodb"{
     security_group_id= module.sg_id-mongodb.sg_id
 }
 
+#user accepting connections form vpn
+resource "aws_security_group_rule" "user"{
+    count=length(var.user_ports_vpn)
+    type= "ingress"
+    from_port= var.user_ports_vpn[count.index]
+    to_port= var.user_ports_vpn[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-vpn.sg_id
+    security_group_id= module.sg_id-user.sg_id
+}
+
 #redis accepting connections form vpn
 resource "aws_security_group_rule" "redis"{
     count=length(var.redis_ports_vpn)

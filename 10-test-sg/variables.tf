@@ -65,3 +65,7 @@ default=[27017]
 variable "mongodb_ports_user"{
 default=[27017]
 }
+
+variable "user_ports_vpn"{
+default=[22]
+}

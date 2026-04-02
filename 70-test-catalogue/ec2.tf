@@ -147,9 +147,13 @@ resource "aws_autoscaling_group" "catalogue" {
 
 resource "aws_autoscaling_policy" "catalogue" {
   name                   = "catalogue.${var.zone_name}"
+<<<<<<< HEAD:test-catalogue/ec2.tf
   #scaling_adjustment     = 1
+=======
+  #scaling_adjustment     = 1 not work this poicytype
+>>>>>>> ed0e87d (added components):70-test-catalogue/ec2.tf
   policy_type       = "TargetTrackingScaling"
-  instance_warmup = 100
+  #instance_warmup = 100
   #cooldown               = 100 this dosent work here
   autoscaling_group_name = aws_autoscaling_group.catalogue.name
 
@@ -163,7 +167,7 @@ resource "aws_autoscaling_policy" "catalogue" {
 }
 
 resource "aws_lb_listener_rule" "catalogue" {
-  listener_arn = data.aws_ssm_parameter.alb-ARN.value
+  listener_arn = data.aws_ssm_parameter.alb-ARN-lisitner.value
   priority     = 10
 
   action {

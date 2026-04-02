@@ -31,8 +31,12 @@ data "aws_ami" "DevOps_practice_ami_id" {
 }
 
 
-data "aws_ssm_parameter" "alb-ARN"{
-name= "/${var.project}/${var.environment}/alb-ARN"
+data "aws_ssm_parameter" "alb-ARN-lisitner"{
+name= "/${var.project}/${var.environment}/alb-ARN-lisitner"
+}
+
+data "aws_ssm_parameter" "flb-ARN-lisitner"{
+name= "/${var.project}/${var.environment}/flb-ARN-lisitner"
 }
 
 data "aws_ssm_parameter" "catalogue-sg_id"{
