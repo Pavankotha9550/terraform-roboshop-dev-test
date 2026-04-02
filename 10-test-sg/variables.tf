@@ -50,6 +50,10 @@ variable "catalogue_ports_vpn"{
 default=[22,8080]
 }
 
+variable "frontend_ports_vpn"{
+    default=[22]
+}
+
 variable "catalogue_ports_bastion"{
 default=[22]
 }
