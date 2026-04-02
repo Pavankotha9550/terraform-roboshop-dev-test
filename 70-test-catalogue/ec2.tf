@@ -147,11 +147,7 @@ resource "aws_autoscaling_group" "catalogue" {
 
 resource "aws_autoscaling_policy" "catalogue" {
   name                   = "catalogue.${var.zone_name}"
-<<<<<<< HEAD:test-catalogue/ec2.tf
-  #scaling_adjustment     = 1
-=======
   #scaling_adjustment     = 1 not work this poicytype
->>>>>>> ed0e87d (added components):70-test-catalogue/ec2.tf
   policy_type       = "TargetTrackingScaling"
   #instance_warmup = 100
   #cooldown               = 100 this dosent work here
