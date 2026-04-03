@@ -187,7 +187,7 @@ resource "aws_security_group_rule" "VPC-1194"{
     security_group_id= module.sg_id-vpn.sg_id
 }
 
-#ALB accepting connections form Bastion
+#ALB accepting connections form vpn
 resource "aws_security_group_rule" "vpn"{
     type= "ingress"
     from_port= 80
@@ -362,3 +362,37 @@ resource "aws_security_group_rule" "frontend"{
     source_security_group_id= module.sg_id-vpn.sg_id
     security_group_id= module.sg_id-frontend.sg_id
 }
+
+#ALB accepting connections form flb
+resource "aws_security_group_rule" "FLB"{
+    count=length(var.alb_ports_flb)
+    type= "ingress"
+    from_port= var.alb_ports_flb[count.index]
+    to_port= var.alb_ports_flb[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-flb.sg_id
+    security_group_id= module.sg_id-alb.sg_id
+}
+
+#FLB accepting connections form internrt http
+resource "aws_security_group_rule" "frontend_alb_http" {
+  count=length(var.frontend_ports_http)
+  type              = "ingress"
+  from_port         = var.frontend_ports_http[count.index]
+  to_port           = var.frontend_ports_http[count.index]
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.sg_id-flb.sg_id
+}
+
+#FLB accepting connections form internrt https
+resource "aws_security_group_rule" "frontend_alb_https" {
+  count=length(var.frontend_ports_https)
+  type              = "ingress"
+  from_port         = var.frontend_ports_https[count.index]
+  to_port           = var.frontend_ports_https[count.index]
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.sg_id-flb.sg_id
+}
+

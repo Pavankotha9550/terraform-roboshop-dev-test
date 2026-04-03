@@ -34,7 +34,7 @@ resource "aws_lb_listener" "fixed_response" {
 
 resource "aws_route53_record" "backend-alb" {
   zone_id =  data.aws_route53_zone.daws84.zone_id
-  name    = "*.backend-dev.daws84.cyou"
+  name    = "*.daws84.cyou"
   type    = "A"
 
   alias {
