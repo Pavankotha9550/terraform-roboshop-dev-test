@@ -30,8 +30,8 @@ resource "terraform_data" "mongodb"{
    provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
-      "sudo yum install -y dos2unix   # if not installed",
-      "dos2unix bootstrap.sh",
+      "sudo yum install -y dos2unix",
+      "dos2unix /tmp/bootstrap.sh",
       "sudo sh /tmp/bootstrap.sh mongodb"
     ]
   }
@@ -67,8 +67,8 @@ resource "terraform_data" "redis"{
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
-      "sudo yum install -y dos2unix   # if not installed",
-      "dos2unix bootstrap.sh",
+      "sudo yum install -y dos2unix",
+      "dos2unix /tmp/bootstrap.sh",
       "sudo sh /tmp/bootstrap.sh redis"
     ]
   }
@@ -106,8 +106,8 @@ resource "terraform_data" "mysql"{
    provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
-      "sudo yum install -y dos2unix   # if not installed",
-      "dos2unix bootstrap.sh",
+      "sudo yum install -y dos2unix",
+      "dos2unix /tmp/bootstrap.sh",
       "sudo sh /tmp/bootstrap.sh mysql"
     ]
   }
@@ -144,8 +144,8 @@ resource "terraform_data" "rabbitmq"{
    provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
-      "sudo yum install -y dos2unix   # if not installed",
-      "dos2unix bootstrap.sh",
+      "sudo yum install -y dos2unix",
+      "dos2unix /tmp/bootstrap.sh",
       "sudo sh /tmp/bootstrap.sh rabbitmq"
     ]
   }
