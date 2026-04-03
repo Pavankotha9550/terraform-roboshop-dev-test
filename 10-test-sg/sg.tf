@@ -307,6 +307,28 @@ resource "aws_security_group_rule" "catalogue_ports_alb"{
     security_group_id= module.sg_id-catalogue.sg_id
 }
 
+#user accepting connections form alb
+resource "aws_security_group_rule" "user_ports_alb"{
+    count=length(var.user_ports_alb)
+    type= "ingress"
+    from_port= var.user_ports_alb[count.index]
+    to_port= var.user_ports_alb[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-alb.sg_id
+    security_group_id= module.sg_id-user.sg_id
+}
+
+#frontend accepting connections form flb
+resource "aws_security_group_rule" "frontend_ports_flb"{
+    count=length(var.frontend_ports_flb)
+    type= "ingress"
+    from_port= var.frontend_ports_flb[count.index]
+    to_port= var.frontend_ports_flb[count.index]
+    protocol= "tcp"
+    source_security_group_id= module.sg_id-flb.sg_id
+    security_group_id= module.sg_id-frontend.sg_id
+}
+
 #mongodb accepting connections form catalogue
 resource "aws_security_group_rule" "mongodb_ports_catalogue"{
     count=length(var.mongodb_ports_catalogue)

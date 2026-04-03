@@ -62,6 +62,10 @@ variable "catalogue_ports_alb"{
 default=[8080]
 }
 
+variable "user_ports_alb"{
+default=[8080]
+}
+
 variable "mongodb_ports_catalogue"{
 default=[27017]
 }
@@ -74,6 +78,8 @@ variable "user_ports_vpn"{
 default=[22]
 }
 
+
+
 variable "alb_ports_flb"{
     default=[8080,80]
 }
@@ -84,4 +90,8 @@ variable "frontend_ports_http"{
 
 variable "frontend_ports_https"{
     default=[443]
+}
+
+variable "frontend_ports_flb"{
+    default=[80,8080]
 }
