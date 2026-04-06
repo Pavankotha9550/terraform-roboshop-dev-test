@@ -18,7 +18,7 @@ module "flb" {
 
 resource "aws_lb_listener" "fixed_response" {
   load_balancer_arn = module.flb.arn
-  port              = "8080"
+  port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = data.aws_ssm_parameter.daws84-arn-flb.value

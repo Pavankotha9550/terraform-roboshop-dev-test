@@ -93,5 +93,5 @@ variable "frontend_ports_https"{
 }
 
 variable "frontend_ports_flb"{
-    default=[80,8080]
+    default=[80,8080,443]
 }
