@@ -182,7 +182,7 @@ resource "aws_lb_listener_rule" "catalogue" {
 
 resource "aws_lb_target_group" "catalogue" {
   name     = "${var.project}-${var.environment}-catalogue"
-  port     = 80
+  port     = 8080
   protocol = "HTTP"
   vpc_id   = data.aws_ssm_parameter.vpc_id.value
   deregistration_delay = 120 #time giving to instance to complete all the pending requests to complete 
