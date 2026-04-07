@@ -23,11 +23,11 @@ default=[22,6379]
 }
 
 variable "redis_ports_user"{
-default=[5679]
+default=[6379]
 }
 
 variable "redis_ports_cart"{
-default=[5679]
+default=[6379]
 }
 
 variable "mysql_ports_vpn"{
