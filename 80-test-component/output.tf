@@ -1,4 +1,4 @@
-output "arn"{
-    value = module.user.arn
-    sensitive = true
-}
+# output "arn"{
+#     value = module.user.arn
+#     sensitive = true
+# }

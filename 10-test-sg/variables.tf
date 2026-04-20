@@ -80,7 +80,7 @@ default=[22]
 
 
 
-variable "alb_ports_flb"{
+variable "alb_ports_frontend"{
     default=[8080,80]
 }
 

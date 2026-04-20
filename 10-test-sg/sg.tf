@@ -385,14 +385,14 @@ resource "aws_security_group_rule" "frontend"{
     security_group_id= module.sg_id-frontend.sg_id
 }
 
-#ALB accepting connections form flb
-resource "aws_security_group_rule" "FLB"{
-    count=length(var.alb_ports_flb)
+#ALB accepting connections form frontend
+resource "aws_security_group_rule" "frontend"{
+    count=length(var.alb_ports_frontend)
     type= "ingress"
-    from_port= var.alb_ports_flb[count.index]
-    to_port= var.alb_ports_flb[count.index]
+    from_port= var.alb_ports_frontend[count.index]
+    to_port= var.alb_ports_frontend[count.index]
     protocol= "tcp"
-    source_security_group_id= module.sg_id-flb.sg_id
+    source_security_group_id= module.sg_id-frontend.sg_id
     security_group_id= module.sg_id-alb.sg_id
 }
 
