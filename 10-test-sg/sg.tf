@@ -386,7 +386,7 @@ resource "aws_security_group_rule" "frontend"{
 }
 
 #ALB accepting connections form frontend
-resource "aws_security_group_rule" "frontend"{
+resource "aws_security_group_rule" "alb_ports_frontend"{
     count=length(var.alb_ports_frontend)
     type= "ingress"
     from_port= var.alb_ports_frontend[count.index]
